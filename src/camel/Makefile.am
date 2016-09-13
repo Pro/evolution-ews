@@ -28,6 +28,7 @@ noinst_HEADERS = \
 	camel-ews-enums.h \
 	camel-ews-enumtypes.h \
 	camel-ews-folder.h \
+	camel-ews-message-info.h \
 	camel-ews-private.h \
 	camel-ews-store-summary.h \
 	camel-ews-store.h \
@@ -57,6 +58,7 @@ libcamelews_priv_la_CPPFLAGS = \
 libcamelews_priv_la_SOURCES = \
 	camel-ews-enumtypes.c \
 	camel-ews-folder.c \
+	camel-ews-message-info.c \
 	camel-ews-store-summary.c \
 	camel-ews-store.c \
 	camel-ews-summary.c \
