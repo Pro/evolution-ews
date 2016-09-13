@@ -46,8 +46,6 @@
 /*Prototypes*/
 static gboolean summary_header_from_db (CamelFolderSummary *s, CamelFIRecord *mir);
 static CamelFIRecord * summary_header_to_db (CamelFolderSummary *s, GError **error);
-static gboolean content_info_to_db (CamelFolderSummary *s, CamelMessageContentInfo *info, CamelMIRecord *mir);
-static CamelMessageContentInfo * content_info_from_db (CamelFolderSummary *s, CamelMIRecord *mir);
 
 /*End of Prototypes*/
 
@@ -86,8 +84,6 @@ camel_ews_summary_class_init (CamelEwsSummaryClass *class)
 	folder_summary_class->message_info_type = CAMEL_TYPE_EWS_MESSAGE_INFO;
 	folder_summary_class->summary_header_to_db = summary_header_to_db;
 	folder_summary_class->summary_header_from_db = summary_header_from_db;
-	folder_summary_class->content_info_to_db = content_info_to_db;
-	folder_summary_class->content_info_from_db = content_info_from_db;
 }
 
 static void
@@ -112,7 +108,6 @@ camel_ews_summary_new (struct _CamelFolder *folder)
 	CamelFolderSummary *summary;
 
 	summary = g_object_new (CAMEL_TYPE_EWS_SUMMARY, "folder", folder, NULL);
-	camel_folder_summary_set_build_content (summary, TRUE);
 
 	camel_folder_summary_load_from_db (summary, NULL);
 
@@ -161,44 +156,6 @@ summary_header_to_db (CamelFolderSummary *s,
 
 	return fir;
 
-}
-
-static CamelMessageContentInfo *
-content_info_from_db (CamelFolderSummary *s,
-                      CamelMIRecord *mir)
-{
-	gchar *part = mir->cinfo;
-	guint32 type = 0;
-
-	if (part) {
-		if (*part == ' ')
-			part++;
-		if (part) {
-			EXTRACT_FIRST_DIGIT (type);
-		}
-	}
-	mir->cinfo = part;
-	if (type)
-		return CAMEL_FOLDER_SUMMARY_CLASS (camel_ews_summary_parent_class)->content_info_from_db (s, mir);
-	else
-		return camel_folder_summary_content_info_new (s);
-}
-
-static gboolean
-content_info_to_db (CamelFolderSummary *s,
-                    CamelMessageContentInfo *info,
-                    CamelMIRecord *mir)
-{
-
-	if (info->type) {
-		g_free (mir->cinfo);
-		mir->cinfo = g_strdup ("1");
-		return CAMEL_FOLDER_SUMMARY_CLASS (camel_ews_summary_parent_class)->content_info_to_db (s, info, mir);
-	} else {
-		g_free (mir->cinfo);
-		mir->cinfo = g_strdup ("0");
-		return TRUE;
-	}
 }
 
 gboolean
