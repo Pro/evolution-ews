@@ -215,7 +215,7 @@ camel_ews_summary_add_message (CamelFolderSummary *summary,
 	g_return_val_if_fail (message != NULL, FALSE);
 
 	/* Create summary entry */
-	mi = camel_folder_summary_info_new_from_message (summary, message, NULL);
+	mi = camel_folder_summary_info_new_from_message (summary, message);
 	g_return_val_if_fail (mi != NULL, FALSE);
 
 	camel_message_info_set_abort_notifications (mi, TRUE);
